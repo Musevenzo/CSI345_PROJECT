@@ -1,0 +1,401 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Programmes Portal API",
+      "version": "1.0.0",
+      "description": "API to fetch programmes that a student qualifies for based on their academic results and check programme availability."
+    },
+    "paths": {
+      "/programmes/qualifications": {
+        "post": {
+          "summary": "Fetch qualifying programmes",
+          "description": "Retrieves a list of programmes that a student qualifies for based on their academic results.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "studentId": {
+                      "type": "string",
+                      "description": "Unique identifier for the student."
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "subject": {
+                            "type": "string",
+                            "description": "Name of the subject."
+                          },
+                          "grade": {
+                            "type": "string",
+                            "description": "Grade achieved in the subject."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": ["studentId", "results"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "programmeId": {
+                          "type": "string",
+                          "description": "Unique identifier for the programme."
+                        },
+                        "programmeName": {
+                          "type": "string",
+                          "description": "Name of the programme."
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "Description of the programme."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input format",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Invalid input format"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/programmes/{programmeId}": {
+        "get": {
+          "summary": "Get programme details",
+          "description": "Retrieves detailed information about a specific programme, including description, requirements, and availability.",
+          "parameters": [
+            {
+              "name": "programmeId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Unique identifier for the programme."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "programmeId": {
+                        "type": "string",
+                        "description": "Unique identifier for the programme."
+                      },
+                      "programmeName": {
+                        "type": "string",
+                        "description": "Name of the programme."
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Description of the programme."
+                      },
+                      "requirements": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "List of requirements for the programme."
+                        }
+                      },
+                      "availability": {
+                        "type": "boolean",
+                        "description": "Indicates if the programme has available spaces."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Programme not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Programme not found"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/programmes/{programmeId}/availability": {
+        "get": {
+          "summary": "Check programme availability",
+          "description": "Checks if there are available spaces in a specific programme.",
+          "parameters": [
+            {
+              "name": "programmeId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Unique identifier for the programme."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "programmeId": {
+                        "type": "string",
+                        "description": "Unique identifier for the programme."
+                      },
+                      "availability": {
+                        "type": "boolean",
+                        "description": "Indicates if the programme has available spaces."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Programme not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Programme not found"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/programmes/{programmeId}/qualifications": {
+        "get": {
+          "summary": "Get programme qualification criteria",
+          "description": "Retrieves the qualification criteria for a specific programme.",
+          "parameters": [
+            {
+              "name": "programmeId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Unique identifier for the programme."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "programmeId": {
+                        "type": "string",
+                        "description": "Unique identifier for the programme."
+                      },
+                      "qualificationCriteria": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "subject": {
+                              "type": "string",
+                              "description": "Required subject."
+                            },
+                            "minimumGrade": {
+                              "type": "string",
+                              "description": "Minimum grade required for the subject."
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Programme not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Programme not found"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/programmes": {
+        "get": {
+          "summary": "List all programmes",
+          "description": "Retrieves a list of all available programmes offered by the institution.",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "programmeId": {
+                          "type": "string",
+                          "description": "Unique identifier for the programme."
+                        },
+                        "programmeName": {
+                          "type": "string",
+                          "description": "Name of the programme."
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "Description of the programme."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
